@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
+# TODO: Rename project here
 project(CMakeSFMLProject LANGUAGES CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -13,9 +14,26 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
+# TODO: Name your executable and add all your *.cpp files
 add_executable(main src/main.cpp)
 target_link_libraries(main PRIVATE sfml-graphics)
+
+# TODO: adjust to executable name
 target_compile_features(main PRIVATE cxx_std_17)
+
+# Include project headers
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+# Set the path to your resources directory
+set(SFML_RESOURCES_DIR ${CMAKE_SOURCE_DIR}/resources)
+
+# Add a custom command to copy the resources to the build directory
+add_custom_command(
+    TARGET ${PROJECT_NAME} PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${SFML_RESOURCES_DIR}"
+        "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/resources"
+)
 
 if(WIN32)
     add_custom_command(
